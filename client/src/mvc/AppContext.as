@@ -5,6 +5,7 @@ package mvc {
 import flash.display.Stage;
 
 import mvc.controller.AppStartCmd;
+import mvc.model.ResourceManager;
 import mvc.view.mediator.MainViewMediator;
 
 import org.robotlegs.base.ContextEvent;
@@ -29,7 +30,7 @@ public class AppContext extends Context {
         mediatorMap.mapView(MainView, MainViewMediator);
 
         // ============= Синглтоны =============
-        //injector.mapSingleton(GameModel);
+        injector.mapSingleton(ResourceManager);
 
         super.startup();
     }

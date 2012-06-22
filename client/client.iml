@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="client">
     <configurations>
-      <configuration name="client" pure-as="true" main-class="ClientApp" output-file="Client.swf" output-folder="$MODULE_DIR$/../out/production/client">
+      <configuration name="client" pure-as="true" main-class="ClientApp" output-file="client.swf" output-folder="$MODULE_DIR$/../out/production/client">
         <dependencies target-player="11.0">
           <entries>
             <entry library-id="69fc6dde-925d-45f4-8d0f-e5bac2397d07">

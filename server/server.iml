@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="server">
     <configurations>
-      <configuration name="server" target-platform="Desktop" main-class="Server" output-file="Server.swf" output-folder="$MODULE_DIR$/../out/production/server">
+      <configuration name="server" target-platform="Desktop" main-class="Server" output-file="server.swf" output-folder="$MODULE_DIR$/../out/production/server">
         <dependencies target-player="11.0">
           <sdk name="4.5" />
         </dependencies>
