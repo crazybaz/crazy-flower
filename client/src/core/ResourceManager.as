@@ -2,7 +2,6 @@
  * @author baz
  */
 package core {
-import flash.display.DisplayObject;
 import flash.display.Loader;
 import flash.events.Event;
 import flash.net.URLRequest;
@@ -22,10 +21,6 @@ public class ResourceManager {
     // Список загруженных ресурсов
     private static var assetList:Dictionary = new Dictionary();
 
-    // Загрузчик
-    private static var loader:Loader = new Loader();
-
-
     public function ResourceManager() {
     }
 
@@ -35,6 +30,7 @@ public class ResourceManager {
             onData(assetList[path]);
         } else {
             // Загружаем
+            var loader:Loader = new Loader();
             loader.load(new URLRequest(path));
             loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
         }
@@ -42,9 +38,8 @@ public class ResourceManager {
         // Кэшируем
         function onComplete(e:Event):void {
             loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onComplete);
-            var image:DisplayObject = loader.content;
-            assetList[path] = image;
-            onData(image);
+            assetList[path] = loader.content;
+            onData(assetList[path]);
         }
     }
 

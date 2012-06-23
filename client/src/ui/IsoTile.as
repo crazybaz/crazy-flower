@@ -7,45 +7,39 @@ import core.Cell;
 import core.ResourceManager;
 
 import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
+import flash.display.Shape;
 import flash.display.Sprite;
 
 public class IsoTile extends Sprite {
     /**
-     * Изометрические координаты с установкой которых, сразу происходит позиционирование
+     * Изометрические координаты
      */
-    private var _isoX:int;
+    private var isoX:int;
+    private var isoY:int;
 
-    public function set isoX(val:int):void {
-        _isoX = val;
-        this.x = val * AppSettings.CELL_SIZE;
-    }
-
-    public function get isoX():int {
-        return _isoX;
-    }
-
-    private var _isoY:int;
-
-    public function set isoY(val:int):void {
-        _isoY = val;
-        this.y = val * AppSettings.CELL_SIZE;
-    }
-
-    public function get isoY():int {
-        return _isoY;
-    }
-
-    // Графика текущего состояния растения
-    public var plantView:DisplayObject;
+    // Слои для графики
+    public var plantLayer:DisplayObjectContainer;
+    public var cellLayer:DisplayObjectContainer;
 
     public function IsoTile(isoX:int, isoY:int):void {
         this.isoX = isoX;
         this.isoY = isoY;
+
+        this.x = (isoX - isoY) * AppSettings.CELL_SIZE / 2;
+        this.y = (isoX + isoY) * AppSettings.CELL_SIZE / 4;
+
+        plantLayer = new Sprite();
+        cellLayer = new Sprite();
+
+        addChild(plantLayer);
+        addChild(cellLayer);
+
+        plantLayer.x = -AppSettings.CELL_SIZE / 2;
+        plantLayer.y = -AppSettings.CELL_SIZE / 2;
+
         // DEBUG:
-        graphics.lineStyle(1, 0x777777, 0.5);
-        graphics.beginFill(0x777777, 0.15);
-        graphics.drawRect(0, 0, AppSettings.CELL_SIZE, AppSettings.CELL_SIZE);
-        graphics.endFill();
+        drawCellView();
     }
 
     /**
@@ -65,20 +59,40 @@ public class IsoTile extends Sprite {
      */
     private function setView(image:DisplayObject):void {
         removeView();
-        plantView = image;
-        addChild(image);
+        plantLayer.addChild(image);
     }
 
     /**
-     * Удалить растение
+     * Удалить изображение растения
      */
     private function removeView():void {
-        plantView && contains(plantView) && removeChild(plantView);
-        plantView = null;
+        plantLayer.removeChildren();
     }
 
-    override public function toString():String {
-        return "[IsoTile isoX=" + isoX + " isoY=" + isoY + "]";
+    /**
+     * Отрисовать ромбик
+     */
+    private function drawCellView():void {
+        var rectSize:Number = Math.sqrt(2 * Math.pow(AppSettings.CELL_SIZE / 2, 2));
+
+        var cellView:Shape = new Shape();
+        cellView.graphics.lineStyle(1, 0x777777, 0.5);
+        cellView.graphics.beginFill(0x777777, 0.15);
+        cellView.graphics.drawRect(0, 0, rectSize, rectSize);
+        cellView.graphics.endFill();
+        cellView.rotation = 45;
+
+        var cellGroup:Sprite = new Sprite();
+        cellGroup.addChild(cellView);
+        cellGroup.scaleY = 0.5;
+        cellLayer.addChild(cellGroup);
+
+        // DEBUG:
+        cellGroup.graphics.lineStyle(1, 0xff00ff);
+        cellGroup.graphics.moveTo(-5, -5);
+        cellGroup.graphics.lineTo(5, 5);
+        cellGroup.graphics.moveTo(5, -5);
+        cellGroup.graphics.lineTo(-5, 5);
     }
 }
 }

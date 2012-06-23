@@ -23,20 +23,16 @@ public class IsoGrid extends Sprite {
         addChild(bg);
 
         // Собрать и отрисовать карту
-        var gridBox:Sprite = new Sprite();
-        gridBox.rotation = 45;
+        var gridLayer:Sprite = new Sprite();
 
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
             tileMap[i] = new Dictionary();
             for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
                 var tile:IsoTile = new IsoTile(i, j);
                 tileMap[i][j] = tile;
-                gridBox.addChild(tile);
+                gridLayer.addChild(tile);
             }
         }
-        var gridLayer:Sprite = new Sprite();
-        gridLayer.scaleY = 0.5;
-        gridLayer.addChild(gridBox);
         addChild(gridLayer);
         gridLayer.x = 742;
         gridLayer.y = 97;

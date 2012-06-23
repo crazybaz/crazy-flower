@@ -32,15 +32,13 @@ public class GridModel extends Actor {
         // Пробегаем по данным, что передал сервер
         for each (var cellData:Object in mapData) {
             // Обновить клетку
-            var i:int = cellData["isoX"];
-            var j:int = cellData["isoY"];
-            Cell(cellMap[i][j]).update(cellData);
+            getCell(cellData["isoX"], cellData["isoY"]).update(cellData);
         }
 
-        // Пробегаем по ячейкам находим мётвые души
+        // Пробегаем по ячейкам находим мёртвые души
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
             for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
-                var cell:Cell = Cell(cellMap[i][j]);
+                var cell:Cell = getCell(i, j);
                 // Очистить ячейку если её нет в ответе, а у нас она заполнена
                 if (cell.isUpdated == false && cell.hasContent && isEmptyCell(cell)) {
                     cell.cleanup();

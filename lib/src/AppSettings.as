@@ -8,7 +8,7 @@ public class AppSettings {
     public static const APP_PORT:int = 8080;
 
     // Грида
-    public static const CELL_SIZE:int = 56;
-    public static const GRID_SIZE:int = 16;
+    public static const CELL_SIZE:int = 100;
+    public static const GRID_SIZE:int = 13;
 }
 }
