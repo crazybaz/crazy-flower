@@ -61,21 +61,24 @@ public class SocketConnection {
      * Данные
      */
     private function onDataReceived(event:ProgressEvent):void {
-        // Длинна полученного сообщения
-        var messageLength:int = socket.readUnsignedInt();
+        // Длинна полученных данных
+        var bytesAvailable:uint = socket.bytesAvailable;
 
-//        try {
-//            if (messageLength <= socket.bytesAvailable) {
-        var message:String = socket.readUTF();
-        handler.onData(message);
-        log("Received: " + message);
-//            } else {
-//                // Сообщение пришло частично
-//                log("Partial message: " + socket.bytesAvailable + " of " + messageLength);
-//            }
-//        } catch/* (e:Error) {
-//            log(e.toString());
-//        }
+        // Длинна сообщения
+        var messageLength:uint = socket.readUnsignedInt();
+
+        try {
+            if (messageLength <= bytesAvailable) {
+                var message:String = socket.readUTF();
+                handler.onData(message);
+                log("Received: " + message);
+            } else {
+                // Сообщение пришло частично
+                log("Partial message: " + bytesAvailable + " of " + messageLength);
+            }
+        } catch (e:Error) {
+            log(e.toString());
+        }
     }
 
     /**

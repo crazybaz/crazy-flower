@@ -27,6 +27,7 @@ public class ButtonPanelMediator extends Mediator {
     override public function onRegister():void {
         eventMap.mapListener(view.plantCloverBtn, MouseEvent.CLICK, onPlantCloverClick);
         eventMap.mapListener(view.plantPotatoBtn, MouseEvent.CLICK, onPlantPotatoClick);
+        eventMap.mapListener(view.plantSunFlowerBtn, MouseEvent.CLICK, onPlantSunFlowerClick);
 
         eventMap.mapListener(view.collectPlantBtn, MouseEvent.CLICK, onCollectPlantClick);
         eventMap.mapListener(view.levelUpBtn, MouseEvent.CLICK, onLevelUpClick);
