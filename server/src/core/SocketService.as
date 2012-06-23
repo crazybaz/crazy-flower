@@ -15,7 +15,7 @@ public class SocketService extends EventDispatcher {
     public function SocketService(socket:Socket, loggingFunction:Function) {
         this.socket = socket;
 
-        socket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
+        socket.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
         socket.addEventListener(Event.CLOSE, onClientClose);
         socket.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 
@@ -27,7 +27,7 @@ public class SocketService extends EventDispatcher {
      * Обработчик получения данных
      * @param event
      */
-    public function socketDataHandler(event:ProgressEvent):void {
+    public function onSocketData(event:ProgressEvent):void {
         // Длинна полученного сообщения
         var messageLength:int = socket.readUnsignedInt();
 

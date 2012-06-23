@@ -2,10 +2,16 @@
  * @author baz
  */
 package mvc {
+import event.SocketEvent;
+
 import flash.display.Stage;
 
 import mvc.controller.AppStartCmd;
+import mvc.controller.SocketConnectedCmd;
 import mvc.model.GridModel;
+import mvc.model.RequestProxy;
+import mvc.model.socket.ISocketHandler;
+import mvc.model.socket.SocketHandler;
 import mvc.view.mediator.IsoGridMediator;
 import mvc.view.mediator.MainViewMediator;
 
@@ -25,6 +31,7 @@ public class AppContext extends Context {
     override public function startup():void {
         // ============= События =============
         commandMap.mapEvent(ContextEvent.STARTUP_COMPLETE, AppStartCmd, ContextEvent, true);
+        commandMap.mapEvent(SocketEvent.CONNECTED, SocketConnectedCmd);
 
         // ============= Переменные =============
         injector.mapValue(Stage, stage);
@@ -35,6 +42,8 @@ public class AppContext extends Context {
 
         // ============= Синглтоны =============
         injector.mapSingleton(GridModel);
+        injector.mapSingletonOf(ISocketHandler, SocketHandler);
+        injector.mapSingleton(RequestProxy);
 
         super.startup();
     }
