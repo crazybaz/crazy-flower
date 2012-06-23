@@ -4,10 +4,12 @@
 package mvc.view.mediator {
 import org.robotlegs.mvcs.Mediator;
 
-public class MainViewMediator extends Mediator {
+import ui.GridView;
+
+public class GridViewMediator extends Mediator {
 
     [Inject]
-    public var view:MainView;
+    public var view:GridView;
 
     override public function onRegister():void {
         view.buildLayout();

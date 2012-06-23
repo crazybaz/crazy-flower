@@ -5,7 +5,7 @@ import flash.display.StageDisplayState;
 
 import mvc.AppContext;
 
-[SWF(width='760', height='760', backgroundColor=0xffffff, frameRate=24)]
+[SWF(width='446', height='322', backgroundColor=0xffffff, frameRate=24)]
 public class ClientApp extends Sprite {
     protected var context:AppContext;
 

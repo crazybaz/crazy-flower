@@ -5,11 +5,13 @@ package mvc {
 import flash.display.Stage;
 
 import mvc.controller.AppStartCmd;
-import mvc.model.ResourceManager;
+import mvc.view.mediator.GridViewMediator;
 import mvc.view.mediator.MainViewMediator;
 
 import org.robotlegs.base.ContextEvent;
 import org.robotlegs.mvcs.Context;
+
+import ui.GridView;
 
 public class AppContext extends Context {
     private var stage:Stage;
@@ -28,9 +30,10 @@ public class AppContext extends Context {
 
         // ============= Медиаторы =============
         mediatorMap.mapView(MainView, MainViewMediator);
+        mediatorMap.mapView(GridView, GridViewMediator);
 
         // ============= Синглтоны =============
-        injector.mapSingleton(ResourceManager);
+        //injector.mapSingleton(ResourceManager);
 
         super.startup();
     }

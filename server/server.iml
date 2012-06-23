@@ -4,6 +4,11 @@
     <configurations>
       <configuration name="server" target-platform="Desktop" main-class="Server" output-file="server.swf" output-folder="$MODULE_DIR$/../out/production/server">
         <dependencies target-player="11.0">
+          <entries>
+            <entry module-name="lib" build-configuration-name="lib">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
           <sdk name="4.5" />
         </dependencies>
         <compiler-options />
@@ -21,6 +26,7 @@
     </content>
     <orderEntry type="jdk" jdkName="4.5" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="lib" />
   </component>
 </module>
 

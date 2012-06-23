@@ -8,6 +8,9 @@
             <entry library-id="69fc6dde-925d-45f4-8d0f-e5bac2397d07">
               <dependency linkage="Merged" />
             </entry>
+            <entry module-name="lib" build-configuration-name="lib">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
           <sdk name="4.5" />
         </dependencies>
@@ -38,6 +41,7 @@
         <jarDirectory url="file://$MODULE_DIR$/dep/swc" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="lib" />
   </component>
 </module>
 
