@@ -38,7 +38,7 @@ public class RequestProxy {
     /**
      * Запрос на левелап всех растений
      */
-    public function sendLeveUpRequest():void {
+    public function sendLevelUpRequest():void {
         sendRequest(new LevelUpRequest());
     }
 
@@ -48,7 +48,9 @@ public class RequestProxy {
      * @param isoPosition
      */
     public function sendPlantRequest(plantType:int, isoPosition:Point):void {
-        sendRequest(new PlantRequest(plantType, isoPosition));
+        var plantRequest:PlantRequest = new PlantRequest();
+        plantRequest.fill(plantType, isoPosition.x, isoPosition.y);
+        sendRequest(plantRequest);
     }
 
     /**

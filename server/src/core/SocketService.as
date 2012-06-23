@@ -33,17 +33,20 @@ public class SocketService extends EventDispatcher {
      * @param event
      */
     private function onSocketData(event:ProgressEvent):void {
-        // Длинна полученного сообщения
-        var messageLength:int = socket.readUnsignedInt();
+        // Длинна полученных данных
+        var bytesAvailable:uint = socket.bytesAvailable;
+
+        // Длинна сообщения
+        var messageLength:uint = socket.readUnsignedInt();
 
         try {
-            if (messageLength <= socket.bytesAvailable) {
+            if (messageLength <= bytesAvailable) {
                 var socketData:String = socket.readUTF();
                 log(socket.remoteAddress + ":" + socket.remotePort + " >> REQUEST " + socketData);
                 handler.process(socketData);
             } else {
                 // Сообщение пришло частично
-                log("Partial message: " + socket.bytesAvailable + " of " + messageLength);
+                log("Partial message: " + bytesAvailable + " of " + messageLength);
             }
         } catch (e:Error) {
             log(e);

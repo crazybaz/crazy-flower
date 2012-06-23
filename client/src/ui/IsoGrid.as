@@ -17,10 +17,18 @@ public class IsoGrid extends Sprite {
         tileMap = new Dictionary();
     }
 
+    public function getTile(i:int, j:int):IsoTile {
+        var tile:IsoTile;
+        tileMap[i] && (tile = tileMap[i][j]);
+        return tile;
+    }
+
     public function buildLayout():void {
         // Подложка
         var bg:AssetSprite = new AssetSprite(ResourceManager.BG);
         addChild(bg);
+        bg.x = -742;
+        bg.y -= 97;
 
         // Собрать и отрисовать карту
         var gridLayer:Sprite = new Sprite();
@@ -34,8 +42,6 @@ public class IsoGrid extends Sprite {
             }
         }
         addChild(gridLayer);
-        gridLayer.x = 742;
-        gridLayer.y = 97;
     }
 
     /**
@@ -47,11 +53,22 @@ public class IsoGrid extends Sprite {
                 var cell:Cell = Cell(cellMap[i][j]);
                 // Обновляем только есть требуется
                 if (cell.isUpdated) {
-                    IsoTile(tileMap[i][j]).update(cell);
+                    getTile(i, j).update(cell);
                     cell.isUpdated = false;
                 }
             }
         }
+    }
+
+    private var selectedCell:IsoTile;
+
+    /**
+     * Подсветить выбранную ячейку
+     */
+    public function selectCell(i:int, j:int):void {
+        selectedCell && selectedCell.cleanCellView();
+        selectedCell = getTile(i, j);
+        selectedCell && selectedCell.drawCellView();
     }
 }
 }

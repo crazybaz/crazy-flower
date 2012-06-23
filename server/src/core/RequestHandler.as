@@ -61,7 +61,9 @@ public class RequestHandler {
      * Посадить растение
      */
     private function makePlant(request:PlantRequest):void {
-        //db.plant(request.plantType, request.isoPosition);
+        //db.plant(request.plantType, request.isoX, request.isoY);
+        db.plant(request["plantType"], request["isoX"], request["isoY"]);
+        makeSync();
     }
 }
 }

@@ -2,21 +2,28 @@
  * @author baz
  */
 package request {
-import flash.geom.Point;
-
 public class PlantRequest extends BaseRequest implements IRequest {
 
+    public var isoX:int;
+    public var isoY:int;
     public var plantType:int;
-    public var isoPosition:Point;
 
     /**
      * Создать запрос на посадку растения
-     * @param plantType тип растения
-     * @param isoPosition координата посадки
      */
-    public function PlantRequest(plantType:int, isoPosition:Point) {
+    public function PlantRequest():void {
+    }
+
+    /**
+     * Заполнить данными
+     * @param plantType тип растения
+     * @param isoX
+     * @param isoY
+     */
+    public function fill(plantType:int, isoX:int, isoY:int):void {
         this.plantType = plantType;
-        this.isoPosition = isoPosition;
+        this.isoX = isoX;
+        this.isoY = isoY;
     }
 }
 }

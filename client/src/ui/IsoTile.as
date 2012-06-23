@@ -26,8 +26,8 @@ public class IsoTile extends Sprite {
         this.isoX = isoX;
         this.isoY = isoY;
 
-        this.x = (isoX - isoY) * AppSettings.CELL_SIZE / 2;
-        this.y = (isoX + isoY) * AppSettings.CELL_SIZE / 4;
+        this.x = (isoX - isoY) * AppSettings.CELL_WIDTH / 2;
+        this.y = (isoX + isoY) * AppSettings.CELL_WIDTH / 4;
 
         plantLayer = new Sprite();
         cellLayer = new Sprite();
@@ -35,11 +35,10 @@ public class IsoTile extends Sprite {
         addChild(plantLayer);
         addChild(cellLayer);
 
+        cellLayer.scaleY = 0.5;
+
         //plantLayer.x = -AppSettings.CELL_SIZE / 2;
         //plantLayer.y = -AppSettings.CELL_SIZE / 2;
-
-        // DEBUG:
-        drawCellView();
     }
 
     /**
@@ -72,8 +71,8 @@ public class IsoTile extends Sprite {
     /**
      * Отрисовать ромбик
      */
-    private function drawCellView():void {
-        var rectSize:Number = Math.sqrt(2 * Math.pow(AppSettings.CELL_SIZE / 2, 2));
+    public function drawCellView():void {
+        var rectSize:Number = Math.sqrt(2 * Math.pow(AppSettings.CELL_WIDTH / 2, 2));
 
         var cellView:Shape = new Shape();
         cellView.graphics.lineStyle(1, 0x777777, 0.5);
@@ -82,17 +81,15 @@ public class IsoTile extends Sprite {
         cellView.graphics.endFill();
         cellView.rotation = 45;
 
-        var cellGroup:Sprite = new Sprite();
-        cellGroup.addChild(cellView);
-        cellGroup.scaleY = 0.5;
-        cellLayer.addChild(cellGroup);
+        cellLayer.addChild(cellView);
 
-        // DEBUG:
-        cellGroup.graphics.lineStyle(1, 0xff00ff);
-        cellGroup.graphics.moveTo(-5, -5);
-        cellGroup.graphics.lineTo(5, 5);
-        cellGroup.graphics.moveTo(5, -5);
-        cellGroup.graphics.lineTo(-5, 5);
+    }
+
+    /**
+     * Убрать ромбик
+     */
+    public function cleanCellView():void {
+        cellLayer.removeChildren();
     }
 }
 }

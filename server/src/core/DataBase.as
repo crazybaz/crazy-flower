@@ -59,10 +59,30 @@ public class DataBase {
     }
 
     /**
+     * Посадить растение
+     */
+    public function plant(plantType:int, i:int, j:int):void {
+        var cell:Cell = Cell(map[i][j]);
+        if (cell.hasContent == false) {
+            cell.plantType = plantType;
+            cell.plantLevel = 1;
+            saveMap();
+        }
+    }
+
+    /**
      * Сохранить
      */
     private function saveMap():void {
-        so.data.map = map;
+        var data:Array = [];
+        for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
+            for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
+                var cell:Cell = Cell(map[i][j]);
+                cell.hasContent && data.push(cell.serialize());
+            }
+        }
+
+        so.data.map = data;
         so.flush();
     }
 
@@ -83,13 +103,11 @@ public class DataBase {
     /**
      * Собрать карту из SharedObject
      */
-    private function getMapFromLocal(map:Object):Object {
-        for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
-            for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
-                var cell:Cell = new Cell(new Point(i, j));
-                cell.fill(map[i][j]);
-                map[i][j] = cell;
-            }
+    private function getMapFromLocal(data:Array):Object {
+        var map:Object = getEmptyMap();
+        for each (var cellData:Object in data) {
+            var cell:Cell = map[cellData["isoX"]][cellData["isoY"]];
+            cell.fill(cellData);
         }
         return map;
     }
