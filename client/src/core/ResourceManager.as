@@ -2,6 +2,7 @@
  * @author baz
  */
 package core {
+import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.events.Event;
 import flash.net.URLRequest;
@@ -27,7 +28,8 @@ public class ResourceManager {
     public static function getImage(path:String, onData:Function):void {
         if (assetList[path]) {
             // Берём из кэша
-            onData(assetList[path]);
+            var bitmap:Bitmap = assetList[path];
+            onData(new Bitmap(bitmap.bitmapData));
         } else {
             // Загружаем
             var loader:Loader = new Loader();

@@ -10,7 +10,6 @@
         private var server:Server = new Server(log);
 
         public function log(message:String):void {
-            trace(message);
             logText += message + "\n";
         }
         ]]></fx:Script>

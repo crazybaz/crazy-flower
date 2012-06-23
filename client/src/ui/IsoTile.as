@@ -48,10 +48,11 @@ public class IsoTile extends Sprite {
         if (cell.hasContent) {
             var plantPath:String = ResourceManager.getPlantPath(cell.plantType, cell.plantLevel);
             var plantView:AssetSprite = new AssetSprite(plantPath, function ():void {
-                plantView.x -= plantView.width / 2;
-                plantView.y -= plantView.height - AppSettings.CELL_WIDTH / 2 - 5;
+                this.x -= this.width / 2;
+                this.y -= this.height - AppSettings.CELL_WIDTH / 2 - 5;
             });
             setView(plantView);
+
         } else {
             removeView();
         }
