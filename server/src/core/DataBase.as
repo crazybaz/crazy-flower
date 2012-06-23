@@ -71,6 +71,17 @@ public class DataBase {
     }
 
     /**
+     * Собрать растение
+     */
+    public function collect(i:int, j:int):void {
+        var cell:Cell = Cell(map[i][j]);
+        if (cell.hasContent) {
+            cell.cleanup();
+            saveMap();
+        }
+    }
+
+    /**
      * Сохранить
      */
     private function saveMap():void {

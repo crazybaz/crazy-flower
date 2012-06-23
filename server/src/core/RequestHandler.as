@@ -6,6 +6,7 @@ import com.adobe.serialization.json.JSON;
 
 import flash.utils.getDefinitionByName;
 
+import request.CollectRequest;
 import request.IRequest;
 import request.LevelUpRequest;
 import request.PlantRequest;
@@ -32,18 +33,20 @@ public class RequestHandler {
         request["construct"](socketData["params"]);
 
         if (request is SyncRequest) {
-            makeSync();
+            onSync();
         } else if (request is LevelUpRequest) {
-            makeLevelUp();
+            onLevelUp();
         } else if (request is PlantRequest) {
-            makePlant(PlantRequest(request));
+            onPlant(PlantRequest(request));
+        } else if (request is CollectRequest) {
+            onCollect(CollectRequest(request));
         }
     }
 
     /**
      * Синхронизация, клиенту возвращается актуальное состояние игры
      */
-    private function makeSync():void {
+    private function onSync():void {
         if (socket.isClosed == false) {
             socket.response(db.getSerializedData());
         }
@@ -52,18 +55,27 @@ public class RequestHandler {
     /**
      * Вырастить
      */
-    private function makeLevelUp():void {
+    private function onLevelUp():void {
         db.levelUp();
-        makeSync();
+        onSync();
     }
 
     /**
      * Посадить растение
      */
-    private function makePlant(request:PlantRequest):void {
+    private function onPlant(request:PlantRequest):void {
         //db.plant(request.plantType, request.isoX, request.isoY);
         db.plant(request["plantType"], request["isoX"], request["isoY"]);
-        makeSync();
+        onSync();
+    }
+
+    /**
+     * Собрать растение
+     */
+    private function onCollect(request:CollectRequest):void {
+        //db.collect(request.isoX, request.isoY);
+        db.collect(request["isoX"], request["isoY"]);
+        onSync();
     }
 }
 }

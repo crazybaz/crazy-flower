@@ -8,6 +8,7 @@ import flash.geom.Point;
 
 import mvc.model.socket.ISocketHandler;
 
+import request.CollectRequest;
 import request.IRequest;
 import request.LevelUpRequest;
 import request.PlantRequest;
@@ -51,6 +52,16 @@ public class RequestProxy {
         var plantRequest:PlantRequest = new PlantRequest();
         plantRequest.fill(plantType, isoPosition.x, isoPosition.y);
         sendRequest(plantRequest);
+    }
+
+    /**
+     * Послать запрос собрать растение
+     * @param isoPosition
+     */
+    public function sendCollectRequest(isoPosition:Point):void {
+        var collectRequest:CollectRequest = new CollectRequest();
+        collectRequest.fill(isoPosition.x, isoPosition.y);
+        sendRequest(collectRequest);
     }
 
     /**

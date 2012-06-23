@@ -35,6 +35,7 @@ public class IsoGridMediator extends Mediator {
 
         addContextListener(UIEvent.UPDATE_MAP, updateMap);
         addContextListener(RequestEvent.PLANT, onPlantPreRequest);
+        addContextListener(RequestEvent.COLLECT, onCollectPreRequest);
     }
 
     // Сохраняем координату мыши
@@ -82,6 +83,21 @@ public class IsoGridMediator extends Mediator {
     }
 
     /**
+     * Выбираем растение которое хотим собрать
+     * @param e
+     */
+    private function onCollectPreRequest(requestEvent:RequestEvent):void {
+        addViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
+        addViewListener(MouseEvent.CLICK, sendRequest);
+
+        function sendRequest(e:MouseEvent):void {
+            removeViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
+            removeViewListener(MouseEvent.CLICK, sendRequest);
+            requestProxy.sendCollectRequest(getIsoPoint(e));
+        }
+    }
+
+    /**
      * Подсветить ячейку
      */
     private function highLiteCell(e:MouseEvent):void {
@@ -90,7 +106,6 @@ public class IsoGridMediator extends Mediator {
     }
 
     /**
-     * REFACTOR:
      * Найти координаты ячейки
      */
     private function getIsoPoint(e:MouseEvent):Point {

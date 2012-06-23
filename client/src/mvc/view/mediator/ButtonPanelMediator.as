@@ -53,9 +53,10 @@ public class ButtonPanelMediator extends Mediator {
     }
 
     /**
-     *
+     * Посылаем сообщение о выборе ячейки для сбора растения
      */
     private function onCollectPlantClick(e:MouseEvent):void {
+        dispatch(new RequestEvent(RequestEvent.COLLECT));
     }
 }
 }
