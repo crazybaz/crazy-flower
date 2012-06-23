@@ -4,7 +4,7 @@
 package {
 import flash.display.Sprite;
 
-import ui.GridView;
+import ui.IsoGrid;
 
 public class MainView extends Sprite {
 
@@ -13,7 +13,8 @@ public class MainView extends Sprite {
 
     public function buildLayout():void {
         // Поляна
-        addChild(new GridView());
+        var isoGrid:IsoGrid = new IsoGrid();
+        addChild(isoGrid);
     }
 }
 }
