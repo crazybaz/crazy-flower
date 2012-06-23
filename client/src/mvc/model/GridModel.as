@@ -28,12 +28,34 @@ public class GridModel extends Actor {
     /**
      * Синхронизируем карту
      */
-    public function sync(mapData:Object) {
+    public function sync(mapData:Object):void {
+        // Пробегаем по данным, что передал сервер
+        for each (var cellData:Object in mapData) {
+            // Обновить клетку
+            var i:int = cellData["isoX"];
+            var j:int = cellData["isoY"];
+            Cell(cellMap[i][j]).update(cellData);
+        }
+
+        // Пробегаем по ячейкам находим мётвые души
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
             for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
-                // Обновить клетку
-                Cell(cellMap[i][j]).update(mapData[i][j]);
+                var cell:Cell = Cell(cellMap[i][j]);
+                // Очистить ячейку если её нет в ответе, а у нас она заполнена
+                if (cell.isUpdated == false && cell.hasContent && isEmptyCell(cell)) {
+                    cell.cleanup();
+                }
+
             }
+        }
+
+        function isEmptyCell(cell:Cell):Boolean {
+            for each (var cellData:Object in mapData) {
+                if (cellData["isoX"] == cell.isoX && cellData["isoY"] == cell.isoY) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 

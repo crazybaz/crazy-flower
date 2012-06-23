@@ -15,14 +15,7 @@ public class Cell {
     public var isoY:int;
 
     // Флаг необходимости обновления
-    private var _isUpdated:Boolean;
-    public function get isUpdated():Boolean {
-        return _isUpdated;
-    }
-
-    public function set isUpdated(val:Boolean):void {
-        _isUpdated = val;
-    }
+    public var isUpdated:Boolean;
 
 
     public function Cell(isoPosition:Point) {
@@ -39,23 +32,41 @@ public class Cell {
     }
 
     /**
-     * Вернуть
+     * Собрать данные для сериализации
      * @return
      */
-    public function serialize():String {
-        return JSON.stringify(this);
+    public function serialize():Object {
+        return {plantType:plantType, plantLevel:plantLevel, isoX:isoX, isoY:isoY};
     }
 
     /**
-     * Обновить состояние
+     * Заполнить свойства
      */
-    public function update(json:Object):void {
-        for (var key:String in json) {
-            if (json[key] != this[key]) {
-                this[key] = json[key];
-                _isUpdated = true;
+    public function fill(data:Object):void {
+        for (var key:String in data) {
+            this[key] = data[key];
+        }
+    }
+
+    /**
+     * Обновить
+     */
+    public function update(data:Object):void {
+        for (var key:String in data) {
+            if (this[key] != data[key]) {
+                this[key] = data[key];
+                isUpdated = true;
             }
         }
+    }
+
+    /**
+     * Очистить
+     */
+    public function cleanup():void {
+        plantType = 0;
+        plantLevel = 0;
+        isUpdated = true;
     }
 }
 }

@@ -23,7 +23,7 @@ public class DataBase {
             so.data.map = map;
             so.flush();
         } else {
-            map = so.data.map;
+            map = getMapFromLocal(so.data.map);
         }
     }
 
@@ -40,7 +40,7 @@ public class DataBase {
                 // Собираем только заполненные ячейки
                 var cell:Cell = Cell(map[i][j]);
                 if (cell.hasContent) {
-                    serializeData.push(cell);
+                    serializeData.push(cell.serialize());
                 }
             }
         }
@@ -59,6 +59,20 @@ public class DataBase {
             }
         }
         return out;
+    }
+
+    /**
+     * Собрать карту из SharedObject
+     */
+    private function getMapFromLocal(map:Object):Object {
+        for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
+            for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
+                var cell:Cell = new Cell(new Point(i, j));
+                cell.fill(map[i][j]);
+                map[i][j] = cell;
+            }
+        }
+        return map;
     }
 }
 }
