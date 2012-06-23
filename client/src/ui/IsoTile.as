@@ -35,8 +35,8 @@ public class IsoTile extends Sprite {
         addChild(plantLayer);
         addChild(cellLayer);
 
-        plantLayer.x = -AppSettings.CELL_SIZE / 2;
-        plantLayer.y = -AppSettings.CELL_SIZE / 2;
+        //plantLayer.x = -AppSettings.CELL_SIZE / 2;
+        //plantLayer.y = -AppSettings.CELL_SIZE / 2;
 
         // DEBUG:
         drawCellView();

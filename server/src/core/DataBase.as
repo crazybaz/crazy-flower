@@ -20,8 +20,7 @@ public class DataBase {
         if (so.data.map == null) {
             // Создать пустую бд
             map = getEmptyMap();
-            so.data.map = map;
-            so.flush();
+            saveMap();
         } else {
             map = getMapFromLocal(so.data.map);
         }
@@ -31,9 +30,6 @@ public class DataBase {
      * Вернуть сериализованное состояние игры для отправки клиенту
      */
     public function getSerializedData():String {
-        Cell(map[0][0]).plantType = 1;
-        Cell(map[0][0]).plantLevel = 1;
-
         var serializeData:Object = [];
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
             for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
@@ -45,6 +41,29 @@ public class DataBase {
             }
         }
         return JSON.encode(serializeData);
+    }
+
+    /**
+     * Поднять уровень у растений
+     */
+    public function levelUp():void {
+        for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
+            for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
+                var cell:Cell = Cell(map[i][j]);
+                if (cell.hasContent) {
+                    cell.plantLevel = Math.min(cell.plantLevel + 1, AppSettings.MAX_PLANT_LEVEL);
+                }
+            }
+        }
+        saveMap();
+    }
+
+    /**
+     * Сохранить
+     */
+    private function saveMap():void {
+        so.data.map = map;
+        so.flush();
     }
 
     /**

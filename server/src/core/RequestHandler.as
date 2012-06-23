@@ -7,6 +7,7 @@ import com.adobe.serialization.json.JSON;
 import flash.utils.getDefinitionByName;
 
 import request.IRequest;
+import request.LevelUpRequest;
 import request.PlantRequest;
 import request.SyncRequest;
 
@@ -32,10 +33,10 @@ public class RequestHandler {
 
         if (request is SyncRequest) {
             makeSync();
+        } else if (request is LevelUpRequest) {
+            makeLevelUp();
         } else if (request is PlantRequest) {
             makePlant(PlantRequest(request));
-        } else {
-            socket.log("Request not recognized " + socketData["clazz"]);
         }
     }
 
@@ -46,6 +47,14 @@ public class RequestHandler {
         if (socket.isClosed == false) {
             socket.response(db.getSerializedData());
         }
+    }
+
+    /**
+     * Вырастить
+     */
+    private function makeLevelUp():void {
+        db.levelUp();
+        makeSync();
     }
 
     /**

@@ -9,6 +9,7 @@ import flash.geom.Point;
 import mvc.model.socket.ISocketHandler;
 
 import request.IRequest;
+import request.LevelUpRequest;
 import request.PlantRequest;
 import request.SyncRequest;
 
@@ -32,6 +33,13 @@ public class RequestProxy {
      */
     public function sendSyncRequest():void {
         sendRequest(new SyncRequest());
+    }
+
+    /**
+     * Запрос на левелап всех растений
+     */
+    public function sendLeveUpRequest():void {
+        sendRequest(new LevelUpRequest());
     }
 
     /**
