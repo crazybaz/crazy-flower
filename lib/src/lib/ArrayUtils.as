@@ -1,7 +1,7 @@
 /**
  * @author baz
  */
-package {
+package lib {
 public class ArrayUtils {
     /**
      * Выбрать рандомное значение в массиве и вернуть его

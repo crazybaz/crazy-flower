@@ -1,7 +1,7 @@
 /**
  * @author baz
  */
-package {
+package lib {
 import flash.display.DisplayObject;
 
 /*
