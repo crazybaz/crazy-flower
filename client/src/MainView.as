@@ -4,6 +4,7 @@
 package {
 import flash.display.Sprite;
 
+import ui.ButtonPanel;
 import ui.IsoGrid;
 
 public class MainView extends Sprite {
@@ -13,8 +14,10 @@ public class MainView extends Sprite {
 
     public function buildLayout():void {
         // Поляна
-        var isoGrid:IsoGrid = new IsoGrid();
-        addChild(isoGrid);
+        addChild(new IsoGrid());
+
+        // Кнопочное меню
+        addChild(new ButtonPanel());
     }
 }
 }

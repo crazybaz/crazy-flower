@@ -12,12 +12,14 @@ import mvc.model.GridModel;
 import mvc.model.RequestProxy;
 import mvc.model.socket.ISocketHandler;
 import mvc.model.socket.SocketHandler;
+import mvc.view.mediator.ButtonPanelMediator;
 import mvc.view.mediator.IsoGridMediator;
 import mvc.view.mediator.MainViewMediator;
 
 import org.robotlegs.base.ContextEvent;
 import org.robotlegs.mvcs.Context;
 
+import ui.ButtonPanel;
 import ui.IsoGrid;
 
 public class AppContext extends Context {
@@ -39,6 +41,7 @@ public class AppContext extends Context {
         // ============= Медиаторы =============
         mediatorMap.mapView(MainView, MainViewMediator);
         mediatorMap.mapView(IsoGrid, IsoGridMediator);
+        mediatorMap.mapView(ButtonPanel, ButtonPanelMediator);
 
         // ============= Синглтоны =============
         injector.mapSingleton(GridModel);
