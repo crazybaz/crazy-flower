@@ -98,7 +98,7 @@ public class IsoGridMediator extends Mediator {
 
         const y:Number = gridPoint.y * 2;
         var isoX:int = Math.floor((y + gridPoint.x) / AppSettings.CELL_WIDTH);
-        var isoY:int = Math.floor((y - gridPoint.y) / AppSettings.CELL_WIDTH);
+        var isoY:int = Math.floor((y - gridPoint.x) / AppSettings.CELL_WIDTH);
 
         return new Point(isoX, isoY);
     }
