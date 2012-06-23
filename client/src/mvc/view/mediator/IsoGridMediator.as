@@ -2,6 +2,9 @@
  * @author baz
  */
 package mvc.view.mediator {
+import event.UIEvent;
+
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 
@@ -17,13 +20,15 @@ public class IsoGridMediator extends Mediator {
     public var view:IsoGrid;
 
     [Inject]
-    public var isoGrid:GridModel;
+    public var gridModel:GridModel;
 
     override public function onRegister():void {
         view.buildLayout();
 
         addViewListener(MouseEvent.MOUSE_DOWN, onMouseDown);
         addViewListener(MouseEvent.MOUSE_UP, onMouseUp);
+
+        addContextListener(UIEvent.UPDATE_MAP, updateMap);
     }
 
     // Сохраняем координату мыши
@@ -46,6 +51,13 @@ public class IsoGridMediator extends Mediator {
         view.x += curPoint.x - mousePoint.x;
         view.y += curPoint.y - mousePoint.y;
         mousePoint = curPoint;
+    }
+
+    /**
+     * Обновить состояние
+     */
+    private function updateMap(e:Event):void {
+        view.update(gridModel.cellMap);
     }
 }
 }

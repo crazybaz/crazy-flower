@@ -71,5 +71,22 @@ public class ResourceManager {
     public static function getSunFlowerPath(id:int):String {
         return StringUtil.substitute(sunflowerTemplate, id);
     }
+
+    /**
+     * Вернуть путь для определённого растения
+     */
+    public static function getPlantPath(plantType:int, id:int):String {
+        var path:String;
+        if (plantType == PlantType.CLOVER) {
+            path = getCloverPath(id);
+        } else if (plantType == PlantType.POTATO) {
+            path = getPotatoPath(id);
+        } else if (plantType == PlantType.SUNFLOWER) {
+            path = getSunFlowerPath(id);
+        } else {
+            throw new Error("Unknown plant type " + plantType);
+        }
+        return path;
+    }
 }
 }

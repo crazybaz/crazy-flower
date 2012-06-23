@@ -48,7 +48,7 @@ public class RequestProxy {
      * @param request
      */
     private function sendRequest(request:IRequest):void {
-        socketConnection.sendData(request.serialize()); //Ну это пиздец компилятора >>> Call to a possibly undefined method
+        //socketConnection.sendData(request.serialize()); // Ну это пиздец компилятора >>> Call to a possibly undefined method
         socketConnection.sendData(request["serialize"]());
     }
 

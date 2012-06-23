@@ -2,6 +2,11 @@
  * @author baz
  */
 package ui {
+import core.AssetSprite;
+import core.Cell;
+import core.ResourceManager;
+
+import flash.display.DisplayObject;
 import flash.display.Sprite;
 
 public class IsoTile extends Sprite {
@@ -30,6 +35,9 @@ public class IsoTile extends Sprite {
         return _isoY;
     }
 
+    // Графика текущего состояния растения
+    public var plantView:DisplayObject;
+
     public function IsoTile(isoX:int, isoY:int):void {
         this.isoX = isoX;
         this.isoY = isoY;
@@ -38,6 +46,35 @@ public class IsoTile extends Sprite {
         graphics.beginFill(0x777777, 0.15);
         graphics.drawRect(0, 0, AppSettings.CELL_SIZE, AppSettings.CELL_SIZE);
         graphics.endFill();
+    }
+
+    /**
+     * Обновить состояние
+     */
+    public function update(cell:Cell):void {
+        if (cell.hasContent) {
+            setView(new AssetSprite(ResourceManager.getPlantPath(cell.plantType, cell.plantLevel)));
+        } else {
+            removeView();
+        }
+    }
+
+    /**
+     * Установить растения
+     * @param image
+     */
+    private function setView(image:DisplayObject):void {
+        removeView();
+        plantView = image;
+        addChild(image);
+    }
+
+    /**
+     * Удалить растение
+     */
+    private function removeView():void {
+        plantView && contains(plantView) && removeChild(plantView);
+        plantView = null;
     }
 
     override public function toString():String {

@@ -34,9 +34,13 @@ public class Server {
      * @param event
      */
     public function onConnect(event:ServerSocketConnectEvent):void {
+        // Читаем или создаём базу данных для клиента
+        var db:DataBase = new DataBase(event.socket.localAddress);
+
         // Делегируем сервису
-        var socketService:SocketService = new SocketService(event.socket, log);
+        var socketService:SocketService = new SocketService(event.socket, new RequestHandler(db), log);
         socketService.addEventListener(Event.CLOSE, onClientClose);
+
         // Сохраняем
         clientSockets.push(socketService);
     }
@@ -47,7 +51,7 @@ public class Server {
      */
     private function onClientClose(event:Event):void {
         for each(var socketService:SocketService in clientSockets) {
-            if (socketService.closed) {
+            if (socketService.isClosed) {
                 socketService = null;
             }
         }

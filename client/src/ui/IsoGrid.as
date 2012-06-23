@@ -3,6 +3,7 @@
  */
 package ui {
 import core.AssetSprite;
+import core.Cell;
 import core.ResourceManager;
 
 import flash.display.Sprite;
@@ -39,6 +40,22 @@ public class IsoGrid extends Sprite {
         addChild(gridLayer);
         gridLayer.x = 742;
         gridLayer.y = 97;
+    }
+
+    /**
+     * Обновить отображение
+     */
+    public function update(cellMap:Dictionary):void {
+        for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
+            for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
+                var cell:Cell = Cell(cellMap[i][j]);
+                // Обновляем только есть требуется
+                if (cell.isUpdated) {
+                    IsoTile(tileMap[i][j]).update(cell);
+                    cell.isUpdated = false;
+                }
+            }
+        }
     }
 }
 }

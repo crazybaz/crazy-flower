@@ -7,13 +7,18 @@ import flash.events.EventDispatcher;
 import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.net.Socket;
+import flash.utils.ByteArray;
 
 public class SocketService extends EventDispatcher {
-    private var socket:Socket;
-    private var log:Function;
+    public var log:Function;
 
-    public function SocketService(socket:Socket, loggingFunction:Function) {
+    private var socket:Socket;
+    private var handler:RequestHandler;
+
+    public function SocketService(socket:Socket, handler:RequestHandler, loggingFunction:Function) {
         this.socket = socket;
+        this.handler = handler;
+        handler.socket = this;
 
         socket.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
         socket.addEventListener(Event.CLOSE, onClientClose);
@@ -27,34 +32,44 @@ public class SocketService extends EventDispatcher {
      * Обработчик получения данных
      * @param event
      */
-    public function onSocketData(event:ProgressEvent):void {
+    private function onSocketData(event:ProgressEvent):void {
         // Длинна полученного сообщения
         var messageLength:int = socket.readUnsignedInt();
 
         try {
             if (messageLength <= socket.bytesAvailable) {
                 var socketData:String = socket.readUTF();
-                log(socket.remoteAddress + ":" + socket.remotePort + " REQUEST " + socketData);
+                log(socket.remoteAddress + ":" + socket.remotePort + " >>> REQUEST " + socketData);
+                handler.process(socketData);
             } else {
                 // Сообщение пришло частично
-                reply("Partial message: " + socket.bytesAvailable + " of " + messageLength);
+                log("Partial message: " + socket.bytesAvailable + " of " + messageLength);
             }
         } catch (e:Error) {
             log(e);
         }
     }
 
-    private function reply(message:String):void {
-        if (message != null) {
-            socket.writeUTFBytes(message);
+    /**
+     * Послать ответ клиенту
+     * @param msg
+     */
+    public function response(msg:String):void {
+        if (msg != null) {
+            var bytes:ByteArray = new ByteArray();
+            bytes.writeObject(msg);
+            bytes.position = 0;
+
+            socket.writeUnsignedInt(bytes.length);
+            socket.writeUTF(msg);
             socket.flush();
-            log(socket.remoteAddress + ":" + socket.remotePort + " RESPONSE " + message);
+
+            log(socket.remoteAddress + ":" + socket.remotePort + " RESPONSE " + msg);
         }
     }
 
     private function onClientClose(event:Event):void {
-        var socket:Socket = event.target as Socket;
-        log("Connection to client " + socket.remoteAddress + ":" + socket.remotePort + " closed.");
+        log("Connection to client " + socket.remoteAddress + ":" + socket.remotePort + " closed");
         dispatchEvent(new Event(Event.CLOSE));
     }
 
@@ -63,8 +78,8 @@ public class SocketService extends EventDispatcher {
         socket.close();
     }
 
-    public function get closed():Boolean {
-        return socket.connected;
+    public function get isClosed():Boolean {
+        return !socket.connected;
     }
 }
 }

@@ -9,9 +9,16 @@ public class BaseRequest {
      * Сериализация класса
      */
     public function serialize():String {
-        var serializeData:Object = {};
-        serializeData[getQualifiedClassName(this)] = this;
-        return JSON.stringify(serializeData);
+        return JSON.stringify({clazz:getQualifiedClassName(this), params:this});
+    }
+
+    /**
+     * Заполнить данные класса из полученного объекта
+     */
+    public function construct(data:Object):void {
+        for (var key:String in data) {
+            this[key] = data[key];
+        }
     }
 }
 }
