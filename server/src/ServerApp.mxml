@@ -8,15 +8,15 @@
     <fx:Script><![CDATA[
         import core.Server;
 
-        import spark.components.VScrollBar;
-
         [Bindable]
         private static var logText:String = '';
-
+        private static var logList:Array = [];
         private var server:Server = new Server(log);
 
         public function log(message:String):void {
-            logText += message + "\n";
+            logList.push(message);
+            logList.splice(0, Math.max(logList.length - 10, 0));
+            logText = logList.join("\n");
         }
         ]]></fx:Script>
 </s:WindowedApplication>

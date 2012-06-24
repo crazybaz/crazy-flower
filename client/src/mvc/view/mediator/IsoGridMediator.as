@@ -14,7 +14,12 @@ import mvc.model.RequestProxy;
 
 import org.robotlegs.mvcs.Mediator;
 
+import request.CollectRequest;
+import request.IRequest;
+import request.PlantRequest;
+
 import ui.IsoGrid;
+import ui.IsoTile;
 
 public class IsoGridMediator extends Mediator {
 
@@ -27,11 +32,19 @@ public class IsoGridMediator extends Mediator {
     [Inject]
     public var requestProxy:RequestProxy;
 
+    // Реквест
+    private var request:IRequest;
+
+    // Координата клетки под курсором
+
+
     override public function onRegister():void {
         view.buildLayout();
 
+        addViewListener(MouseEvent.CLICK, onMouseClick);
         addViewListener(MouseEvent.MOUSE_DOWN, onMouseDown);
         addViewListener(MouseEvent.MOUSE_UP, onMouseUp);
+        addViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
 
         addContextListener(UIEvent.UPDATE_MAP, updateMap);
         addContextListener(RequestEvent.PLANT, onPlantPreRequest);
@@ -48,6 +61,27 @@ public class IsoGridMediator extends Mediator {
 
     private function onMouseUp(e:MouseEvent):void {
         removeViewListener(MouseEvent.MOUSE_MOVE, moveIsoGrid);
+    }
+
+    private function onMouseClick(e:MouseEvent):void {
+        // Завершить подсветку ячеек под мышкой
+        //removeViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
+
+        var isoPoint:Point = getIsoPoint(e);
+        var tile:IsoTile = view.getTile(isoPoint.x, isoPoint.y);
+
+        if (tile) {
+            // Убрать выделение с ячейки
+            tile.cleanCellView();
+
+            // Послать запрос
+            if (request) {
+                // Обновить координаты
+                request["isoX"] = isoPoint.x;
+                request["isoY"] = isoPoint.y;
+                requestProxy.sendRequest(request);
+            }
+        }
     }
 
     /**
@@ -68,33 +102,21 @@ public class IsoGridMediator extends Mediator {
     }
 
     /**
-     * Выбираем ячейку для посадки растения
+     * Создаём запрос для выполнения
      * @param e
      */
-    private function onPlantPreRequest(requestEvent:RequestEvent):void {
-        addViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
-        addViewListener(MouseEvent.CLICK, sendRequest);
-
-        function sendRequest(e:MouseEvent):void {
-            removeViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
-            removeViewListener(MouseEvent.CLICK, sendRequest);
-            requestProxy.sendPlantRequest(requestEvent.plantType, getIsoPoint(e));
-        }
+    private function onPlantPreRequest(e:RequestEvent):void {
+        var req:PlantRequest = new PlantRequest();
+        req.plantType = e.plantType;
+        request = req;
     }
 
     /**
-     * Выбираем растение которое хотим собрать
+     * Создаём запрос для выполнения
      * @param e
      */
-    private function onCollectPreRequest(requestEvent:RequestEvent):void {
-        addViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
-        addViewListener(MouseEvent.CLICK, sendRequest);
-
-        function sendRequest(e:MouseEvent):void {
-            removeViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
-            removeViewListener(MouseEvent.CLICK, sendRequest);
-            requestProxy.sendCollectRequest(getIsoPoint(e));
-        }
+    private function onCollectPreRequest(e:RequestEvent):void {
+        request = new CollectRequest();
     }
 
     /**
@@ -103,6 +125,7 @@ public class IsoGridMediator extends Mediator {
     private function highLiteCell(e:MouseEvent):void {
         var isoPoint:Point = getIsoPoint(e);
         view.selectCell(isoPoint.x, isoPoint.y);
+
     }
 
     /**

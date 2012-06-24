@@ -33,20 +33,20 @@ public class SocketService extends EventDispatcher {
      * @param event
      */
     private function onSocketData(event:ProgressEvent):void {
-        // Длинна полученных данных
-        var bytesAvailable:uint = socket.bytesAvailable;
-
-        // Длинна сообщения
-        var messageLength:uint = socket.readUnsignedInt();
-
         try {
-            if (messageLength <= bytesAvailable) {
-                var socketData:String = socket.readUTF();
-                log(socket.remoteAddress + ":" + socket.remotePort + " >> REQUEST " + socketData);
-                handler.process(socketData);
-            } else {
-                // Сообщение пришло частично
-                log("Partial message: " + bytesAvailable + " of " + messageLength);
+            // Может прийти несколько сообщений
+            while (socket.bytesAvailable) {
+                // Длинна сообщения
+                var messageLength:uint = socket.readUnsignedInt();
+
+                if (messageLength <= socket.bytesAvailable) {
+                    var socketData:String = socket.readUTF();
+                    log(socket.remoteAddress + ":" + socket.remotePort + " >> REQUEST " + socketData);
+                    handler.process(socketData);
+                } else {
+                    // Сообщение пришло частично
+                    log("Partial message: " + socket.bytesAvailable + " of " + messageLength);
+                }
             }
         } catch (e:Error) {
             log(e);
@@ -58,17 +58,15 @@ public class SocketService extends EventDispatcher {
      * @param msg
      */
     public function response(msg:String):void {
-        if (msg != null) {
-            var bytes:ByteArray = new ByteArray();
-            bytes.writeObject(msg);
-            bytes.position = 0;
+        var bytes:ByteArray = new ByteArray();
+        bytes.writeObject(msg);
+        bytes.position = 0;
 
-            socket.writeUnsignedInt(bytes.length);
-            socket.writeUTF(msg);
-            socket.flush();
+        socket.writeUnsignedInt(bytes.length);
+        socket.writeUTF(msg);
+        socket.flush();
 
-            log(socket.remoteAddress + ":" + socket.remotePort + " >> RESPONSE " + msg);
-        }
+        log(socket.remoteAddress + ":" + socket.remotePort + " >> RESPONSE " + "[...]"/*msg*/);
     }
 
     private function onClientClose(event:Event):void {
