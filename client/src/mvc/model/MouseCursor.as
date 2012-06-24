@@ -17,7 +17,7 @@ public class MouseCursor {
 
     public function removeIcon():void {
         icon && context.contains(icon) && context.removeChild(icon);
-        context.removeEventListener(MouseEvent.MOUSE_MOVE, updateIconPosition);
+        context.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
         this.icon = null;
     }
 
