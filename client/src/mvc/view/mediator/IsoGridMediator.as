@@ -50,16 +50,13 @@ public class IsoGridMediator extends Mediator {
 
     // Сохраняем координату мыши
     private var mousePoint:Point;
-    private var isMouseDown:Boolean;
     private var isMouseMoved:Boolean;
 
     private function onMouseDown(e:MouseEvent):void {
-        isMouseDown = true;
         mousePoint = new Point(e.stageX, e.stageY);
     }
 
     private function onMouseUp(e:MouseEvent):void {
-        isMouseDown = false;
         mousePoint = null;
         // Клик
         isMouseMoved == false && onMouseClick(e);
@@ -74,7 +71,7 @@ public class IsoGridMediator extends Mediator {
         if (mousePoint) {
             // Таскаем карту
             isMouseMoved = true;
-            isMouseDown && moveIsoGrid(new Point(e.stageX, e.stageY));
+            moveIsoGrid(new Point(e.stageX, e.stageY));
         }
 
         // Подсветить ячейку
@@ -108,6 +105,7 @@ public class IsoGridMediator extends Mediator {
         view.x = Math.max(view.x, view.stage.stageWidth - view.width);
         view.y = Math.min(view.y, 0);
         view.y = Math.max(view.y, view.stage.stageHeight - view.height);
+        trace(view.x, view.y)
 
         mousePoint = curPoint;
     }

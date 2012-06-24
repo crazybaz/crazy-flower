@@ -70,6 +70,10 @@ public class IsoGrid extends Sprite {
         // Позиционируем по bg
         plantLayer.x = cellLayer.x = 742;
         plantLayer.y = cellLayer.y = 97;
+
+        // Красивое позиционирование
+        this.x = -465;
+        this.y = -60;
     }
 
     /**
