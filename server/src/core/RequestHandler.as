@@ -9,6 +9,7 @@ import flash.utils.getDefinitionByName;
 import request.CollectRequest;
 import request.IRequest;
 import request.LevelUpRequest;
+import request.MoveRequest;
 import request.PlantRequest;
 import request.SyncRequest;
 
@@ -41,6 +42,8 @@ public class RequestHandler {
             onPlant(PlantRequest(request));
         } else if (request is CollectRequest) {
             onCollect(CollectRequest(request));
+        } else if (request is MoveRequest) {
+            onMove(MoveRequest(request));
         }
     }
 
@@ -76,6 +79,15 @@ public class RequestHandler {
     private function onCollect(request:CollectRequest):void {
         //db.collect(request.isoX, request.isoY);
         db.collect(request["isoX"], request["isoY"]);
+        onSync();
+    }
+
+    /**
+     * Переместить
+     */
+    private function onMove(request:MoveRequest):void {
+        //db.move(request.curIsoX, request.curIsoY, request.newIsoX, request.newIsoY);
+        db.move(request["curIsoX"], request["curIsoY"], request["newIsoX"], request["newIsoY"]);
         onSync();
     }
 }

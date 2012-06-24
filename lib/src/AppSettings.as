@@ -9,7 +9,7 @@ public class AppSettings {
 
     // Грида
     public static const CELL_WIDTH:int = 100;
-    public static const GRID_SIZE:int = 13;
+    public static const GRID_SIZE:int = 12;
 
     // Растения
     public static const MAX_PLANT_LEVEL:int = 5;

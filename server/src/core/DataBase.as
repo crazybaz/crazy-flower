@@ -82,6 +82,19 @@ public class DataBase {
     }
 
     /**
+     * Переместить растение
+     */
+    public function move(curI:int, curJ:int, newI:int, newJ:int):void {
+        var curCell:Cell = Cell(map[curI][curJ]);
+        var newCell:Cell = Cell(map[newI][newJ]);
+        if (curCell.hasContent && newCell.hasContent == false) {
+            newCell.plantType = curCell.plantType;
+            newCell.plantLevel = curCell.plantLevel;
+            curCell.cleanup();
+        }
+    }
+
+    /**
      * Сохранить
      */
     private function saveMap():void {
