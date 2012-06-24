@@ -139,7 +139,7 @@ public class IsoGridMediator extends Mediator {
      * Найти координаты ячейки
      */
     private function getIsoPoint(e:MouseEvent):Point {
-        var gridPoint:Point = view.globalToLocal(new Point(e.stageX, e.stageY));
+        var gridPoint:Point = view.plantLayer.globalToLocal(new Point(e.stageX, e.stageY));
 
         const y:Number = gridPoint.y * 2;
         var isoX:int = Math.floor((y + gridPoint.x) / AppSettings.CELL_WIDTH);
