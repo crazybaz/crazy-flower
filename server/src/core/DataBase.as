@@ -27,7 +27,11 @@ public class DataBase {
     }
 
     private function getCell(i:int, j:int):Cell {
-        return map[i] && map[i][j];
+        var cell:Cell;
+        if (map[i]) {
+            cell = map[i][j];
+        }
+        return cell;
     }
 
     /**

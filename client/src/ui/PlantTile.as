@@ -10,7 +10,19 @@ import flash.display.DisplayObject;
 import flash.display.Sprite;
 
 public class PlantTile extends Sprite {
+    private var isoX:int;
+    private var isoY:int;
+
+    public var image:DisplayObject;
+
     public function PlantTile(isoX:int, isoY:int):void {
+        this.isoX = isoX;
+        this.isoY = isoY;
+        updateLayout();
+    }
+
+
+    public function updateLayout():void {
         this.x = (isoX - isoY) * AppSettings.CELL_WIDTH / 2;
         this.y = (isoX + isoY) * AppSettings.CELL_WIDTH / 4;
     }
@@ -36,16 +48,18 @@ public class PlantTile extends Sprite {
      * Установить растения
      * @param image
      */
-    private function setView(image:DisplayObject):void {
+    public function setView(image:DisplayObject):void {
         removeView();
         addChild(image);
+        this.image = image;
     }
 
     /**
      * Удалить изображение растения
      */
-    private function removeView():void {
+    public function removeView():void {
         removeChildren();
+        image = null;
     }
 }
 }

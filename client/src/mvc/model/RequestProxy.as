@@ -11,6 +11,7 @@ import mvc.model.socket.ISocketHandler;
 import request.CollectRequest;
 import request.IRequest;
 import request.LevelUpRequest;
+import request.MoveRequest;
 import request.PlantRequest;
 import request.SyncRequest;
 
@@ -62,6 +63,17 @@ public class RequestProxy {
         var collectRequest:CollectRequest = new CollectRequest();
         collectRequest.fill(isoPosition.x, isoPosition.y);
         sendRequest(collectRequest);
+    }
+
+    /**
+     * Послать запрос на перемещение растения
+     * @param curPosition
+     * @param newPosition
+     */
+    public function sendMoveRequest(curPosition:Point, newPosition:Point):void {
+        var moveRequest:MoveRequest = new MoveRequest();
+        moveRequest.fill(curPosition.x, curPosition.y, newPosition.x, newPosition.y);
+        sendRequest(moveRequest);
     }
 
     /**
