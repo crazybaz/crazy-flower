@@ -41,10 +41,10 @@ public class IsoGridMediator extends Mediator {
     override public function onRegister():void {
         view.buildLayout();
 
-        addViewListener(MouseEvent.CLICK, onMouseClick);
+        //addViewListener(MouseEvent.CLICK, onMouseClick);
         addViewListener(MouseEvent.MOUSE_DOWN, onMouseDown);
         addViewListener(MouseEvent.MOUSE_UP, onMouseUp);
-        addViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
+        addViewListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 
         addContextListener(UIEvent.UPDATE_MAP, updateMap);
         addContextListener(RequestEvent.PLANT, onPlantPreRequest);
@@ -53,20 +53,39 @@ public class IsoGridMediator extends Mediator {
 
     // Сохраняем координату мыши
     private var mousePoint:Point;
+    private var isMouseDown:Boolean;
+    private var isMouseMoved:Boolean;
 
     private function onMouseDown(e:MouseEvent):void {
+        isMouseDown = true;
         mousePoint = new Point(e.stageX, e.stageY);
-        addViewListener(MouseEvent.MOUSE_MOVE, moveIsoGrid);
     }
 
     private function onMouseUp(e:MouseEvent):void {
-        removeViewListener(MouseEvent.MOUSE_MOVE, moveIsoGrid);
+        isMouseDown = false;
+        mousePoint = null;
+        // Клик
+        isMouseMoved == false && onMouseClick(e);
+        isMouseMoved = false;
+    }
+
+    /**
+     * Обработчик движения мышью
+     * @param e
+     */
+    private function onMouseMove(e:MouseEvent):void {
+        if (mousePoint) {
+            // Таскаем карту
+            isMouseMoved = true;
+            isMouseDown && moveIsoGrid(new Point(e.stageX, e.stageY));
+        }
+
+        // Подсветить ячейку
+        var isoPoint:Point = getIsoPoint(e);
+        view.selectCell(isoPoint.x, isoPoint.y);
     }
 
     private function onMouseClick(e:MouseEvent):void {
-        // Завершить подсветку ячеек под мышкой
-        //removeViewListener(MouseEvent.MOUSE_MOVE, highLiteCell);
-
         var isoPoint:Point = getIsoPoint(e);
         var tile:IsoTile = view.getTile(isoPoint.x, isoPoint.y);
 
@@ -76,6 +95,7 @@ public class IsoGridMediator extends Mediator {
 
             // Послать запрос
             if (request) {
+                // REFACTOR:
                 // Обновить координаты
                 request["isoX"] = isoPoint.x;
                 request["isoY"] = isoPoint.y;
@@ -87,8 +107,7 @@ public class IsoGridMediator extends Mediator {
     /**
      * Таскание
      */
-    private function moveIsoGrid(e:MouseEvent):void {
-        var curPoint:Point = new Point(e.stageX, e.stageY);
+    private function moveIsoGrid(curPoint:Point):void {
         view.x += curPoint.x - mousePoint.x;
         view.y += curPoint.y - mousePoint.y;
         mousePoint = curPoint;
@@ -117,15 +136,6 @@ public class IsoGridMediator extends Mediator {
      */
     private function onCollectPreRequest(e:RequestEvent):void {
         request = new CollectRequest();
-    }
-
-    /**
-     * Подсветить ячейку
-     */
-    private function highLiteCell(e:MouseEvent):void {
-        var isoPoint:Point = getIsoPoint(e);
-        view.selectCell(isoPoint.x, isoPoint.y);
-
     }
 
     /**
