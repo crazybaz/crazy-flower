@@ -10,21 +10,22 @@ import flash.display.DisplayObject;
 import flash.display.Sprite;
 
 public class PlantTile extends Sprite {
-    private var isoX:int;
-    private var isoY:int;
-
     public var image:DisplayObject;
 
     public function PlantTile(isoX:int, isoY:int):void {
-        this.isoX = isoX;
-        this.isoY = isoY;
-        updateLayout();
+        this.x = (isoX - isoY) * AppSettings.CELL_WIDTH / 2;
+        this.y = (isoX + isoY) * AppSettings.CELL_WIDTH / 4;
     }
 
 
+    /**
+     * Спозиционировать изображение
+     */
     public function updateLayout():void {
-        this.x = (isoX - isoY) * AppSettings.CELL_WIDTH / 2;
-        this.y = (isoX + isoY) * AppSettings.CELL_WIDTH / 4;
+        if (image) {
+            image.x = -image.width / 2;
+            image.y = -image.height + AppSettings.CELL_WIDTH / 2 + 5;
+        }
     }
 
     /**
@@ -33,12 +34,8 @@ public class PlantTile extends Sprite {
     public function update(cell:Cell):void {
         if (cell.hasContent) {
             var plantPath:String = ResourceManager.getPlantPath(cell.plantType, cell.plantLevel);
-            var plantView:AssetSprite = new AssetSprite(plantPath, function ():void {
-                this.x -= this.width / 2;
-                this.y -= this.height - AppSettings.CELL_WIDTH / 2 - 5;
-            });
+            var plantView:AssetSprite = new AssetSprite(plantPath, updateLayout);
             setView(plantView);
-
         } else {
             removeView();
         }
@@ -52,6 +49,7 @@ public class PlantTile extends Sprite {
         removeView();
         addChild(image);
         this.image = image;
+        updateLayout();
     }
 
     /**

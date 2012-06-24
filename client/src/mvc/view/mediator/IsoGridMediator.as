@@ -2,11 +2,14 @@
  * @author baz
  */
 package mvc.view.mediator {
+import core.AssetSprite;
 import core.Cell;
+import core.ResourceManager;
 
 import event.RequestEvent;
 import event.UIEvent;
 
+import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
@@ -54,7 +57,7 @@ public class IsoGridMediator extends Mediator {
     private var mousePoint:Point;
     private var mouseIsoPoint:Point;
     private var isMouseMoved:Boolean;
-    private var draggedPlant:PlantTile;
+    private var draggedPlantView:DisplayObject;
 
     private function onMouseDown(e:MouseEvent):void {
         mousePoint = new Point(e.stageX, e.stageY);
@@ -63,8 +66,15 @@ public class IsoGridMediator extends Mediator {
         // Смотрим что в ячейке
         var isoPoint:Point = getIsoPoint(e);
         var cell:Cell = gridModel.getCell(isoPoint.x, isoPoint.y);
-        if (cell.hasContent) {
-            draggedPlant = view.getPlantTile(isoPoint.x, isoPoint.y);
+        if (cell && cell.hasContent) {
+            var plantTile:PlantTile = view.getPlantTile(isoPoint.x, isoPoint.y);
+            // Создаём экземпляр для таскания
+            draggedPlantView = new AssetSprite(ResourceManager.getPlantPath(cell.plantType, cell.plantLevel));
+            view.dragLayer.addChild(draggedPlantView);
+            draggedPlantView.x = plantTile.x + plantTile.image.x;
+            draggedPlantView.y = plantTile.y + plantTile.image.y;
+            // Очистить саму ячейку
+            plantTile.removeView();
         }
     }
 
@@ -73,7 +83,7 @@ public class IsoGridMediator extends Mediator {
         isMouseMoved == false && onMouseClick(e);
 
         // Таскали растение
-        if (draggedPlant) {
+        if (draggedPlantView) {
             var newIsoPoint:Point = getIsoPoint(e);
             // Если конечная ячейка существует в гриде и она свободная
             var cell:Cell = gridModel.getCell(newIsoPoint.x, newIsoPoint.y);
@@ -82,19 +92,27 @@ public class IsoGridMediator extends Mediator {
                 if (mouseIsoPoint.equals(newIsoPoint) == false) {
                     // Запрос на сервер
                     requestProxy.sendMoveRequest(mouseIsoPoint, newIsoPoint);
-                    // Меняем контент, чтобы небыло эффекта прыгающей графики
-                    view.getPlantTile(newIsoPoint.x, newIsoPoint.y).setView(draggedPlant.image);
+                    // Ставим в ячейку изображение
+                    var newPlantTile:PlantTile = view.getPlantTile(newIsoPoint.x, newIsoPoint.y);
+                    newPlantTile.setView(draggedPlantView);
+                } else {
+                    revertDragBack();
                 }
+            } else {
+                revertDragBack();
             }
+        }
 
-            // Спозиционировать в свою ячейку
-            draggedPlant.updateLayout();
+        // Вернуть изображение на место
+        function revertDragBack():void {
+            var startPlantTile:PlantTile = view.getPlantTile(mouseIsoPoint.x, mouseIsoPoint.y);
+            startPlantTile.setView(draggedPlantView);
         }
 
         mousePoint = null;
         mouseIsoPoint = null;
         isMouseMoved = false;
-        draggedPlant = null;
+        draggedPlantView = null;
     }
 
     /**
@@ -112,7 +130,7 @@ public class IsoGridMediator extends Mediator {
             var curPoint:Point = new Point(e.stageX, e.stageY);
 
             // Перетаскивание растения
-            if (draggedPlant) {
+            if (draggedPlantView) {
                 movePlant(curPoint);
             } else {
                 moveIsoGrid(curPoint);
@@ -154,8 +172,8 @@ public class IsoGridMediator extends Mediator {
      * Таскание растения
      */
     private function movePlant(curPoint:Point):void {
-        draggedPlant.x += curPoint.x - mousePoint.x;
-        draggedPlant.y += curPoint.y - mousePoint.y;
+        draggedPlantView.x += curPoint.x - mousePoint.x;
+        draggedPlantView.y += curPoint.y - mousePoint.y;
         mousePoint = curPoint;
     }
 

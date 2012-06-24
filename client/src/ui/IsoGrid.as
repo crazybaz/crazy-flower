@@ -15,6 +15,7 @@ public class IsoGrid extends Sprite {
     // Слои для графики
     public var plantLayer:DisplayObjectContainer;
     public var cellLayer:DisplayObjectContainer;
+    public var dragLayer:DisplayObjectContainer;
 
     // Массивы
     private var plantMap:Dictionary;
@@ -49,6 +50,7 @@ public class IsoGrid extends Sprite {
         // Заполняем
         plantLayer = new Sprite();
         cellLayer = new Sprite();
+        dragLayer = new Sprite();
 
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
             plantMap[i] = new Dictionary();
@@ -65,11 +67,12 @@ public class IsoGrid extends Sprite {
         }
 
         addChild(plantLayer);
+        addChild(dragLayer);
         addChild(cellLayer);
 
         // Позиционируем по bg
-        plantLayer.x = cellLayer.x = 742;
-        plantLayer.y = cellLayer.y = 97;
+        plantLayer.x = cellLayer.x = dragLayer.x = 742;
+        plantLayer.y = cellLayer.y = dragLayer.y = 97;
 
         // Красивое позиционирование
         this.x = -465;
