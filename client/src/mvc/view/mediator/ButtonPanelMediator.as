@@ -9,6 +9,7 @@ import core.ResourceManager;
 import event.RequestEvent;
 
 import flash.events.MouseEvent;
+import flash.geom.Point;
 
 import mvc.model.MouseCursor;
 import mvc.model.RequestProxy;
@@ -39,17 +40,17 @@ public class ButtonPanelMediator extends Mediator {
 
     private function onPlantCloverClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.PLANT, PlantType.CLOVER));
-        mouseCursor.setIcon(new AssetSprite(ResourceManager.CLOVER_ICON));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.CLOVER_ICON), new Point(e.stageX, e.stageY));
     }
 
     private function onPlantPotatoClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.PLANT, PlantType.POTATO));
-        mouseCursor.setIcon(new AssetSprite(ResourceManager.POTATO_ICON));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.POTATO_ICON), new Point(e.stageX, e.stageY));
     }
 
     private function onPlantSunFlowerClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.PLANT, PlantType.SUNFLOWER));
-        mouseCursor.setIcon(new AssetSprite(ResourceManager.SUNFLOWER_ICON));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.SUNFLOWER_ICON), new Point(e.stageX, e.stageY));
     }
 
     /**
@@ -65,7 +66,7 @@ public class ButtonPanelMediator extends Mediator {
      */
     private function onCollectPlantClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.COLLECT));
-        mouseCursor.setIcon(new AssetSprite(ResourceManager.SHOVEL_ICON));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.SHOVEL_ICON), new Point(e.stageX, e.stageY));
     }
 }
 }
