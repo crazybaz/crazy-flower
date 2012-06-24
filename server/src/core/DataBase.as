@@ -26,6 +26,10 @@ public class DataBase {
         }
     }
 
+    private function getCell(i:int, j:int):Cell {
+        return map[i] && map[i][j];
+    }
+
     /**
      * Вернуть сериализованное состояние игры для отправки клиенту
      */
@@ -62,8 +66,8 @@ public class DataBase {
      * Посадить растение
      */
     public function plant(plantType:int, i:int, j:int):void {
-        var cell:Cell = Cell(map[i][j]);
-        if (cell.hasContent == false) {
+        var cell:Cell = getCell(i, j);
+        if (cell && cell.hasContent == false) {
             cell.plantType = plantType;
             cell.plantLevel = 1;
             saveMap();
@@ -74,8 +78,8 @@ public class DataBase {
      * Собрать растение
      */
     public function collect(i:int, j:int):void {
-        var cell:Cell = Cell(map[i][j]);
-        if (cell.hasContent) {
+        var cell:Cell = getCell(i, j);
+        if (cell && cell.hasContent) {
             cell.cleanup();
             saveMap();
         }
@@ -85,9 +89,9 @@ public class DataBase {
      * Переместить растение
      */
     public function move(curI:int, curJ:int, newI:int, newJ:int):void {
-        var curCell:Cell = Cell(map[curI][curJ]);
-        var newCell:Cell = Cell(map[newI][newJ]);
-        if (curCell.hasContent && newCell.hasContent == false) {
+        var curCell:Cell = getCell(curI, curJ);
+        var newCell:Cell = getCell(newI, newJ);
+        if (curCell && newCell && curCell.hasContent && newCell.hasContent == false) {
             newCell.plantType = curCell.plantType;
             newCell.plantLevel = curCell.plantLevel;
             curCell.cleanup();
@@ -101,7 +105,7 @@ public class DataBase {
         var data:Array = [];
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
             for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
-                var cell:Cell = Cell(map[i][j]);
+                var cell:Cell = getCell(i, j);
                 cell.hasContent && data.push(cell.serialize());
             }
         }
