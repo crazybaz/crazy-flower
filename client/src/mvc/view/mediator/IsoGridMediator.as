@@ -19,7 +19,7 @@ import request.IRequest;
 import request.PlantRequest;
 
 import ui.IsoGrid;
-import ui.IsoTile;
+import ui.PlantTile;
 
 public class IsoGridMediator extends Mediator {
 
@@ -34,9 +34,6 @@ public class IsoGridMediator extends Mediator {
 
     // Реквест
     private var request:IRequest;
-
-    // Координата клетки под курсором
-
 
     override public function onRegister():void {
         view.buildLayout();
@@ -87,20 +84,15 @@ public class IsoGridMediator extends Mediator {
 
     private function onMouseClick(e:MouseEvent):void {
         var isoPoint:Point = getIsoPoint(e);
-        var tile:IsoTile = view.getTile(isoPoint.x, isoPoint.y);
+        var tile:PlantTile = view.getPlantTile(isoPoint.x, isoPoint.y);
 
-        if (tile) {
-            // Убрать выделение с ячейки
-            tile.cleanCellView();
-
-            // Послать запрос
-            if (request) {
-                // REFACTOR:
-                // Обновить координаты
-                request["isoX"] = isoPoint.x;
-                request["isoY"] = isoPoint.y;
-                requestProxy.sendRequest(request);
-            }
+        // Послать запрос
+        if (tile && request) {
+            // REFACTOR:
+            // Обновить координаты
+            request["isoX"] = isoPoint.x;
+            request["isoY"] = isoPoint.y;
+            requestProxy.sendRequest(request);
         }
     }
 

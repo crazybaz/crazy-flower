@@ -6,23 +6,41 @@ import core.AssetSprite;
 import core.Cell;
 import core.ResourceManager;
 
+import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.utils.Dictionary;
 
 public class IsoGrid extends Sprite {
 
-    private var tileMap:Dictionary;
+    // Слои для графики
+    public var plantLayer:DisplayObjectContainer;
+    public var cellLayer:DisplayObjectContainer;
+
+    // Массивы
+    private var plantMap:Dictionary;
+    private var cellMap:Dictionary;
+
 
     public function IsoGrid() {
-        tileMap = new Dictionary();
+        plantMap = new Dictionary();
+        cellMap = new Dictionary();
     }
 
-    public function getTile(i:int, j:int):IsoTile {
-        var tile:IsoTile;
-        tileMap[i] && (tile = tileMap[i][j]);
+    public function getPlantTile(i:int, j:int):PlantTile {
+        var tile:PlantTile;
+        plantMap[i] && (tile = plantMap[i][j]);
         return tile;
     }
 
+    public function getCellTile(i:int, j:int):CellTile {
+        var tile:CellTile;
+        cellMap[i] && (tile = cellMap[i][j]);
+        return tile;
+    }
+
+    /**
+     * Собрать карту
+     */
     public function buildLayout():void {
         // Подложка
         var bg:AssetSprite = new AssetSprite(ResourceManager.BG);
@@ -30,18 +48,26 @@ public class IsoGrid extends Sprite {
         bg.x = -742;
         bg.y -= 97;
 
-        // Собрать и отрисовать карту
-        var gridLayer:Sprite = new Sprite();
+        // Заполняем
+        plantLayer = new Sprite();
+        cellLayer = new Sprite();
 
         for (var i:int = 0; i < AppSettings.GRID_SIZE; i++) {
-            tileMap[i] = new Dictionary();
+            plantMap[i] = new Dictionary();
+            cellMap[i] = new Dictionary();
             for (var j:int = 0; j < AppSettings.GRID_SIZE; j++) {
-                var tile:IsoTile = new IsoTile(i, j);
-                tileMap[i][j] = tile;
-                gridLayer.addChild(tile);
+                var plantTile:PlantTile = new PlantTile(i, j);
+                plantMap[i][j] = plantTile;
+                plantLayer.addChild(plantTile);
+
+                var cellTie:CellTile = new CellTile(i, j);
+                cellMap[i][j] = cellTie;
+                cellLayer.addChild(cellTie);
             }
         }
-        addChild(gridLayer);
+
+        addChild(plantLayer);
+        addChild(cellLayer);
     }
 
     /**
@@ -53,21 +79,21 @@ public class IsoGrid extends Sprite {
                 var cell:Cell = Cell(cellMap[i][j]);
                 // Обновляем только есть требуется
                 if (cell.isUpdated) {
-                    getTile(i, j).update(cell);
+                    getPlantTile(i, j).update(cell);
                     cell.isUpdated = false;
                 }
             }
         }
     }
 
-    private var selectedCell:IsoTile;
+    private var selectedCell:CellTile;
 
     /**
      * Подсветить выбранную ячейку
      */
     public function selectCell(i:int, j:int):void {
         selectedCell && selectedCell.cleanCellView();
-        selectedCell = getTile(i, j);
+        selectedCell = getCellTile(i, j);
         selectedCell && selectedCell.drawCellView();
     }
 }
