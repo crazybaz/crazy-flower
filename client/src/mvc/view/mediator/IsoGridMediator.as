@@ -43,7 +43,6 @@ public class IsoGridMediator extends Mediator {
     override public function onRegister():void {
         view.buildLayout();
 
-        //addViewListener(MouseEvent.CLICK, onMouseClick);
         addViewListener(MouseEvent.MOUSE_DOWN, onMouseDown);
         addViewListener(MouseEvent.MOUSE_UP, onMouseUp);
         addViewListener(MouseEvent.MOUSE_MOVE, onMouseMove);

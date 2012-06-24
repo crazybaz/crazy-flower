@@ -9,6 +9,7 @@ import flash.display.Stage;
 import mvc.controller.AppStartCmd;
 import mvc.controller.SocketConnectedCmd;
 import mvc.model.GridModel;
+import mvc.model.MouseCursor;
 import mvc.model.RequestProxy;
 import mvc.model.socket.ISocketHandler;
 import mvc.model.socket.SocketHandler;
@@ -47,6 +48,7 @@ public class AppContext extends Context {
         injector.mapSingleton(GridModel);
         injector.mapSingletonOf(ISocketHandler, SocketHandler);
         injector.mapSingleton(RequestProxy);
+        injector.mapSingleton(MouseCursor);
 
         super.startup();
     }

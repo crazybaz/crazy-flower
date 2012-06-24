@@ -2,12 +2,15 @@
  * @author baz
  */
 package mvc.view.mediator {
+import core.AssetSprite;
 import core.PlantType;
+import core.ResourceManager;
 
 import event.RequestEvent;
 
 import flash.events.MouseEvent;
 
+import mvc.model.MouseCursor;
 import mvc.model.RequestProxy;
 
 import org.robotlegs.mvcs.Mediator;
@@ -22,7 +25,8 @@ public class ButtonPanelMediator extends Mediator {
     [Inject]
     public var requestProxy:RequestProxy;
 
-    private var plantType:int;
+    [Inject]
+    public var mouseCursor:MouseCursor;
 
     override public function onRegister():void {
         eventMap.mapListener(view.plantCloverBtn, MouseEvent.CLICK, onPlantCloverClick);
@@ -35,14 +39,17 @@ public class ButtonPanelMediator extends Mediator {
 
     private function onPlantCloverClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.PLANT, PlantType.CLOVER));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.CLOVER_ICON));
     }
 
     private function onPlantPotatoClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.PLANT, PlantType.POTATO));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.POTATO_ICON));
     }
 
     private function onPlantSunFlowerClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.PLANT, PlantType.SUNFLOWER));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.SUNFLOWER_ICON));
     }
 
     /**
@@ -50,6 +57,7 @@ public class ButtonPanelMediator extends Mediator {
      */
     private function onLevelUpClick(e:MouseEvent):void {
         requestProxy.sendLevelUpRequest();
+        mouseCursor.removeIcon();
     }
 
     /**
@@ -57,6 +65,7 @@ public class ButtonPanelMediator extends Mediator {
      */
     private function onCollectPlantClick(e:MouseEvent):void {
         dispatch(new RequestEvent(RequestEvent.COLLECT));
+        mouseCursor.setIcon(new AssetSprite(ResourceManager.SHOVEL_ICON));
     }
 }
 }

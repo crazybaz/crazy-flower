@@ -14,6 +14,12 @@ public class ResourceManager {
     // Базовые константы путей
     public static const BG:String = "assets/bg.jpg";
 
+    // Иконки курсоров
+    public static const CLOVER_ICON:String = "assets/icon/clover.png";
+    public static const POTATO_ICON:String = "assets/icon/potato.png";
+    public static const SUNFLOWER_ICON:String = "assets/icon/sunflower.png";
+    public static const SHOVEL_ICON:String = "assets/icon/shovel.png";
+
     // Шаблоны
     private static const cloverTemplate:String = "assets/clover/{0}.png";
     private static const potatoTemplate:String = "assets/potato/{0}.png";
