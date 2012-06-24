@@ -45,8 +45,6 @@ public class IsoGrid extends Sprite {
         // Подложка
         var bg:AssetSprite = new AssetSprite(ResourceManager.BG);
         addChild(bg);
-        bg.x = -742;
-        bg.y -= 97;
 
         // Заполняем
         plantLayer = new Sprite();
@@ -68,6 +66,10 @@ public class IsoGrid extends Sprite {
 
         addChild(plantLayer);
         addChild(cellLayer);
+
+        // Позиционируем по bg
+        plantLayer.x = cellLayer.x = 742;
+        plantLayer.y = cellLayer.y = 97;
     }
 
     /**

@@ -102,6 +102,13 @@ public class IsoGridMediator extends Mediator {
     private function moveIsoGrid(curPoint:Point):void {
         view.x += curPoint.x - mousePoint.x;
         view.y += curPoint.y - mousePoint.y;
+
+        // Не даём скролить карту дальше не видимой области
+        view.x = Math.min(view.x, 0);
+        view.x = Math.max(view.x, view.stage.stageWidth - view.width);
+        view.y = Math.min(view.y, 0);
+        view.y = Math.max(view.y, view.stage.stageHeight - view.height);
+
         mousePoint = curPoint;
     }
 
