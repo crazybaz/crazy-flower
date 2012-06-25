@@ -34,17 +34,18 @@ public class SocketService extends EventDispatcher {
      */
     private function handshake(event:ProgressEvent):void {
         var socket:Socket = event.target as Socket;
-        var socketData:String = socket.readUTF();
+        var socketData:String = socket.readUTFBytes(socket.bytesAvailable);
         if (socketData == "<policy-file-request/>") {
-            var policy:String = '<cross-domain-policy><allow-access-from domain="*" to-ports="' + AppSettings.APP_PORT + '" /></cross-domain-policy>\x00';
+            var policy:String = '<cross-domain-policy><allow-access-from domain="*" to-ports="*" /></cross-domain-policy>\x00';
             socket.writeUTFBytes(policy);
             socket.flush();
             socket.close();
-            log(socket.remoteAddress + ":" + socket.remotePort + " >> POLICY " + policy);
-        } else {
+            log(">> POLICY " + policy);
+        } else if (socketData == "BEGIN") {
             socket.removeEventListener(ProgressEvent.SOCKET_DATA, handshake);
             socket.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
-            process(socketData);
+            log(">> REQUEST " + socketData);
+            response("READY");
         }
     }
 
@@ -56,11 +57,21 @@ public class SocketService extends EventDispatcher {
         try {
             // Может прийти несколько сообщений
             while (socket.bytesAvailable) {
-                process(socket.readUTF());
+                var bytesAvailable:uint = socket.bytesAvailable;
+                // Длинна сообщения
+                var messageLength:uint = socket.readUnsignedInt();
+
+                if (messageLength <= bytesAvailable) {
+                    var message:String = socket.readUTF();
+                    log(socket.remoteAddress + ":" + socket.remotePort + " >> REQUEST " + message);
+                    handler.process(message);
+                } else {
+                    // Сообщение пришло частично
+                    log("Partial message: " + bytesAvailable + " of " + messageLength);
+                }
             }
         } catch (e:Error) {
             log(e);
-            log(e.getStackTrace());
         }
     }
 

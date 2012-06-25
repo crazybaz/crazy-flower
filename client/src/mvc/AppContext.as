@@ -34,7 +34,7 @@ public class AppContext extends Context {
     override public function startup():void {
         // ============= События =============
         commandMap.mapEvent(ContextEvent.STARTUP_COMPLETE, AppStartCmd, ContextEvent, true);
-        commandMap.mapEvent(SocketEvent.CONNECTED, SocketConnectedCmd);
+        commandMap.mapEvent(SocketEvent.READY, SocketConnectedCmd);
 
         // ============= Переменные =============
         injector.mapValue(Stage, stage);

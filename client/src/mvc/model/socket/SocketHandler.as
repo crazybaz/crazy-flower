@@ -19,8 +19,8 @@ public class SocketHandler extends Actor implements ISocketHandler {
     public function SocketHandler() {
     }
 
-    public function onConnect():void {
-        dispatch(new Event(SocketEvent.CONNECTED));
+    public function onReady():void {
+        dispatch(new Event(SocketEvent.READY));
     }
 
     /**

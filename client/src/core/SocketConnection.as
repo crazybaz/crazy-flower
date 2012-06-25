@@ -8,6 +8,7 @@ import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
 import flash.events.TimerEvent;
 import flash.net.Socket;
+import flash.utils.ByteArray;
 import flash.utils.Timer;
 
 import mvc.model.socket.ISocketHandler;
@@ -53,7 +54,9 @@ public class SocketConnection {
     private function onConnect(event:Event):void {
         retryTimer.removeEventListener(TimerEvent.TIMER, connect);
         retryTimer.stop();
-        handler.onConnect();
+
+        socket.writeUTFBytes("BEGIN");
+        socket.flush();
     }
 
     /**
@@ -69,7 +72,11 @@ public class SocketConnection {
 
                 if (messageLength <= bytesAvailable) {
                     var message:String = socket.readUTF();
-                    handler.onData(message);
+                    if (message == "READY") {
+                        handler.onReady();
+                    } else {
+                        handler.onData(message);
+                    }
                     log("Received: " + message);
                 } else {
                     // Сообщение пришло частично
@@ -85,6 +92,11 @@ public class SocketConnection {
      * Послать запрос
      */
     public function sendData(msg:String):void {
+        var bytes:ByteArray = new ByteArray();
+        bytes.writeObject(msg);
+        bytes.position = 0;
+
+        socket.writeUnsignedInt(bytes.length);
         socket.writeUTF(msg);
         socket.flush();
 

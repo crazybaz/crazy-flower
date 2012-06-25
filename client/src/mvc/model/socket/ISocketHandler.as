@@ -3,7 +3,7 @@
  */
 package mvc.model.socket {
 public interface ISocketHandler {
-    function onConnect():void;
+    function onReady():void;
 
     function onData(message:String):void;
 }
