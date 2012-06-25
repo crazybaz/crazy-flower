@@ -3,6 +3,8 @@
  */
 package {
 public class AppSettings {
+    // Статика
+    public static const STATIC_HOST:String = "84.22.141.80";
     // Сокет
     public static const APP_HOST:String = "127.0.0.1";
     public static const APP_PORT:int = 8080;
