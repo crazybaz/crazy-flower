@@ -2,7 +2,6 @@ package {
 
 import flash.display.Sprite;
 import flash.display.StageDisplayState;
-import flash.system.Security;
 
 import mvc.AppContext;
 
@@ -11,8 +10,6 @@ public class ClientApp extends Sprite {
     protected var context:AppContext;
 
     public function ClientApp() {
-        Security.allowDomain("*");
-
         stage.displayState = StageDisplayState.NORMAL;
         stage.focus = stage;
 
