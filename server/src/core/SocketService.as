@@ -20,12 +20,32 @@ public class SocketService extends EventDispatcher {
         this.handler = handler;
         handler.socket = this;
 
-        socket.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
+        socket.addEventListener(ProgressEvent.SOCKET_DATA, handshake);
         socket.addEventListener(Event.CLOSE, onClientClose);
         socket.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 
         log = loggingFunction;
         log("Connected to " + socket.remoteAddress + ":" + socket.remotePort);
+    }
+
+    /**
+     * Обработать запрос на политику
+     * @param event
+     */
+    private function handshake(event:ProgressEvent):void {
+        var socket:Socket = event.target as Socket;
+        var socketData:String = socket.readUTF();
+        if (socketData == "<policy-file-request/>") {
+            var policy:String = '<cross-domain-policy><allow-access-from domain="*" to-ports="' + AppSettings.APP_PORT + '" /></cross-domain-policy>\x00';
+            socket.writeUTFBytes(policy);
+            socket.flush();
+            socket.close();
+            log(socket.remoteAddress + ":" + socket.remotePort + " >> POLICY " + policy);
+        } else {
+            socket.removeEventListener(ProgressEvent.SOCKET_DATA, handshake);
+            socket.addEventListener(ProgressEvent.SOCKET_DATA, onSocketData);
+            process(socketData);
+        }
     }
 
     /**
@@ -36,22 +56,21 @@ public class SocketService extends EventDispatcher {
         try {
             // Может прийти несколько сообщений
             while (socket.bytesAvailable) {
-                var bytesAvailable:uint = socket.bytesAvailable;
-                // Длинна сообщения
-                var messageLength:uint = socket.readUnsignedInt();
-
-                if (messageLength <= bytesAvailable) {
-                    var socketData:String = socket.readUTF();
-                    log(socket.remoteAddress + ":" + socket.remotePort + " >> REQUEST " + socketData);
-                    handler.process(socketData);
-                } else {
-                    // Сообщение пришло частично
-                    log("Partial message: " + bytesAvailable + " of " + messageLength);
-                }
+                process(socket.readUTF());
             }
         } catch (e:Error) {
             log(e);
+            log(e.getStackTrace());
         }
+    }
+
+    /**
+     * Обработка полученных данных
+     * @param socketData
+     */
+    private function process(socketData:String):void {
+        log(socket.remoteAddress + ":" + socket.remotePort + " >> REQUEST " + socketData);
+        handler.process(socketData);
     }
 
     /**

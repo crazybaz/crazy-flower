@@ -8,7 +8,6 @@ import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
 import flash.events.TimerEvent;
 import flash.net.Socket;
-import flash.utils.ByteArray;
 import flash.utils.Timer;
 
 import mvc.model.socket.ISocketHandler;
@@ -86,11 +85,6 @@ public class SocketConnection {
      * Послать запрос
      */
     public function sendData(msg:String):void {
-        var bytes:ByteArray = new ByteArray();
-        bytes.writeObject(msg);
-        bytes.position = 0;
-
-        socket.writeUnsignedInt(bytes.length);
         socket.writeUTF(msg);
         socket.flush();
 
